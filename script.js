@@ -1,28 +1,68 @@
 // Assignment Code
 var generateBtn = document.querySelector("#generate");
 
-// Function to create a n-m array
-function createNToMArray(start, end) {
-  const charArray = Array(end - start);
-  for (let i = 0; i < (end + 1 - start); i++) {
-    charArray[i] = i + start;
+// Function to create our criteria array
+function createCriteriaArray(numCrit, upperCrit, lowerCrit, specCrit) {
+  // lists of ASCII characters
+  // ASCII codes range from 32-126
+  // digits : 48-57
+  // uppercase : 65-90
+  // lowercase : 97-122
+  // symbol : everything else
+    // 32 to 47, 
+    // 58 to 64, 
+    // 91 to 96, 
+    // 123 to 126
+
+  let criteria = [];
+  if (numCrit) {
+    for (let i = 48; i <= 57; i++) {
+      criteria.push(i);
+    }
   }
-  return charArray;
+  if (upperCrit) {
+    for (let i = 65; i <= 90; i++) {
+      criteria.push(i);
+    }
+  }
+  if (lowerCrit) {
+    for (let i = 97; i <= 122; i++) {
+      criteria.push(i);
+    }
+  }
+  if (specCrit) {
+    for (let i = 32; i <= 47; i++) {
+      criteria.push(i);
+    }
+    for (let i = 58; i <= 64; i++) {
+      criteria.push(i);
+    }
+    for (let i = 91; i <= 96; i++) {
+      criteria.push(i);
+    }
+    for (let i = 123; i <= 126; i++) {
+      criteria.push(i);
+    }
+  }
+  return criteria;
 }
 
 // Write password to the #password input
 function generatePassword() {
   let passwordLength = prompt("Type desired password length:");
+  // allows user to cancel
   if (passwordLength == null) {
-    return;
+    return "";
   }
   
   passwordLength = Number(passwordLength);
   if (passwordLength < 8 || passwordLength > 128 || isNaN(passwordLength)) {
     alert("Length must be between 8 and 128 characters");
-    return;
+    return "";
   }
   
+  // I could keep the user here until they give me something good but nahhh
+
   // while (passwordLength < 8 || passwordLength > 128 || isNaN(passwordLength)) 
   // {
   //   passwordLength = prompt("Length must be between 8 and 128 characters:");
@@ -45,40 +85,8 @@ function generatePassword() {
     return;
   }
 
-  // lists of ASCII characters
-  // ASCII codes range from 32-126
-  // digits : 48-57
-  // uppercase : 65-90
-  // lowercase : 97-122
-  // symbol : everything else
-  criteriaArray = createNToMArray(32, 126);
-  if (!includeNumeric) {
-    // splices codes 48 to 57
-    criteriaArray.splice(16, 10);
-  }
   
-  if (!includeUppercase) {
-    // splices codes 65 to 90
-    criteriaArray.splice(33, 26);
-  }
-  
-  if (!includeLowercase) {
-    // splices codes 97 to 122
-    criteriaArray.splice(65, 26);
-  }
-  
-  if (!includeSpecial) {
-    // splices codes multiple sections
-    // 32 to 47, 
-    // 58 to 64, 
-    // 91 to 96, 
-    // 123 to 126
-    criteriaArray.splice(0, 10);
-    criteriaArray.splice(26, 7);
-    criteriaArray.splice(59, 6);
-    criteriaArray.splice(91, 4);
-  }
-
+  criteriaArray = createCriteriaArray(includeNumeric, includeUppercase, includeLowercase, includeSpecial);
 
   let asciiCodes = [];
   for (let i = 0; i < passwordLength; i++) {
@@ -86,7 +94,6 @@ function generatePassword() {
     asciiCodes.push(String.fromCharCode(uniChar));
   }
 
-  // asciiCodes = asciiCodes.join("");
   newPassword = asciiCodes.join("");
   console.log();
   return newPassword;
